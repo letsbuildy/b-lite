@@ -1,11 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
-//Motor pins(2 X 2-pin connector) connected to DRR8833
-#define m1_pin1 2
-#define m1_pin2 0
-#define m2_pin1 10
-#define m2_pin2 14
+// Motor pins(2 X 2-pin connector) connected to DRR8833
+#define m1_pin1 0
+#define m1_pin2 2
+#define m2_pin1 14
+#define m2_pin2 15
 
 // programmable I/O (2 X 3-pin connector) 5v bi-directional level shifted driving at BAT level
 #define io1 12
@@ -18,10 +18,6 @@
 #define i2c_tx 4
 #define i2c_rx 5
 
-// pre-soldered components in board  
-#define buzzer 15
-#define switch 16
-
 
 String command;             //String to store app command state.
 int speedCar = 800;         // 400 - 1023.
@@ -32,7 +28,7 @@ const int IN_2 = m1_pin1;
 const int IN_3 = m2_pin2;
 const int IN_4 = m2_pin1;
 
-const char* ssid = "buidybee";
+const char* ssid = "buidybee_rc_car";
 ESP8266WebServer server(80);
 
 void setup() {
@@ -43,9 +39,9 @@ void setup() {
   
   Serial.begin(115200);
     // We set a Static IP address
-  IPAddress local_IP(192, 168, 4, 2);
+  IPAddress local_IP(192, 168, 4, 1);
   // We set a Gateway IP address
-  IPAddress gateway(192, 168, 4, 2);
+  IPAddress gateway(192, 168, 4, 1);
   IPAddress subnet(255, 255, 255, 0);
 // Connecting WiFi
   WiFi.softAPConfig(local_IP,gateway,subnet);
@@ -53,6 +49,7 @@ void setup() {
   WiFi.softAP(ssid);
 
   IPAddress myIP = WiFi.softAPIP();
+  // should print the same ip set above
   Serial.print("AP IP address: ");
   Serial.println(myIP);
  
