@@ -54,7 +54,7 @@ void setup() {
   Serial.println(myIP);
  
  // Starting WEB-server 
-     server.on ( "/", HTTP_handleRoot );
+     server.on ( "move", HTTP_handleRoot );
      server.onNotFound ( HTTP_handleRoot );
      server.begin();    
 }
@@ -137,14 +137,14 @@ void stopRobot(){
       digitalWrite(IN_1, LOW);
       digitalWrite(IN_2, LOW);
 
-      digitalWrite(IN_3, HIGH);
+      digitalWrite(IN_3, LOW);
       digitalWrite(IN_4, LOW);
  }
 
 void loop() {
     server.handleClient();
     
-      command = server.arg("state");
+      command = server.arg("dir");
       if (command == "F") goAhead();
       else if (command == "B") goBack();
       else if (command == "L") goLeft();
@@ -169,8 +169,8 @@ void loop() {
 
 void HTTP_handleRoot(void) {
 
-if( server.hasArg("state") ){
-       Serial.println(server.arg("state"));
+if( server.hasArg("dir") ){
+       Serial.println(server.arg("dir"));
        server.send ( 200, "text/html", "" );
        wither = 0;
   }
