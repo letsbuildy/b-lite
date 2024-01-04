@@ -8,8 +8,8 @@
 #define m2_pin2 14
 
 // programmable I/O (2 X 3-pin connector) 5v bi-directional level shifted driving at BAT level
-#define io1 12
-#define io2 13
+#define io2 12
+#define io1 13
 
 // Analog input pin (1 X 3-pin connector) driving at 3.3V
 #define analog_sensor A0
