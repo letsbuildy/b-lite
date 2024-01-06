@@ -2,7 +2,7 @@
 #include "blite.h"
 #define NUMPIXELS 24
 
-const int PIN = io2;
+const int PIN = io1;
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
