@@ -8,8 +8,8 @@ long duration;
 float distanceCm;
 float distanceInch;
 
-const int echoPin = io3;
-const int trigPin = io4;
+#define echoPin D1
+#define trigPin D2
 
 void setup() {
   Serial.begin(115200); // Starts the serial communication

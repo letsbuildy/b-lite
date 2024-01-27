@@ -7,21 +7,10 @@ B-lite kit provides:
 4. 1 X I2C port for industry standard communication protocol.
 5. 1 X Serial port for flashing and serial monitoring.
 
-B-lite can be programmed using Arduino IDE.
-To enable the kit add the below code on top:
 
-```
-#define m1_pin1 2;
-#define m1_pin2 10;
-#define m2_pin1 0;
-#define m2_pin2 14;
+Install Arduino IDE: [install section] (https://support.arduino.cc/hc/en-us/articles/360019833020-Download-and-install-Arduino-IDE)
+Add the borad to the IDE: http://arduino.esp8266.com/stable/package_esp8266com_index.json
 
-#define io1 12;
-#define io2 13;
-
-#define analog_sensor A0;
-
-#define i2c_tx 4;
-#define i2c_rx 5;
-
-```
+Additional library required:
+Neopixel: https://github.com/adafruit/Adafruit_NeoPixel
+wifi-control: https://github.com/Links2004/arduinoWebSockets
