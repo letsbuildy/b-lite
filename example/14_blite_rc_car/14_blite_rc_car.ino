@@ -15,7 +15,7 @@ void setup(){
     }
     
     //check wifi
-    // if (myBot.connectWiFi("ZTE_2.4G_6eZrkS","ijF3kXh4")){
+    // if (myBot.connectWiFi("","")){
     //     myBot.glowLed(true);
     // } else {
     //     Serial.println("Cannot connect");
