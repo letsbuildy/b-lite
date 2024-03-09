@@ -1,25 +1,5 @@
 #include "blite.h"
 
-void Blite::defineM12(bool polarity) {
-    if (polarity){
-        m1 = M12_A;
-        m2 = M12_B;
-    } else {
-        m2 = M12_A;
-        m1 = M12_B;
-    }
-}
-
-void Blite::defineM34(bool polarity) {
-    if (polarity){
-        m3 = M34_A;
-        m4 = M34_B;
-    } else {
-        m4 = M34_A;
-        m3 = M34_B;
-    }
-}
-
 int Blite::getIO(const char * io){
     if (io == "io1") {
         return IO1;
@@ -33,15 +13,12 @@ int Blite::getIO(const char * io){
     return -1;
     
 }
-
 void Blite::reversePolarityM12(){
-    defineM12(false);
+    this->defineM12(false);
 }
-
 void Blite::reversePolarityM34(){
-    defineM34(false);
+    this->defineM34(false);
 }
-
 void Blite::moveForward(){
     analogWrite(m1,speed);
     digitalWrite(m2,LOW);
@@ -67,25 +44,98 @@ void Blite::turnLeft(){
     digitalWrite(m4,LOW);
 }
 void Blite::setSpeed(int s){
-    speed = s ;
+    this->speed = s ;
 }
-bool Blite::connectWifi(char username, char password){
+bool Blite::connectWiFi(const char *username, const char *password){
+    WiFi.disconnect();
+    WiFi.mode(WIFI_STA);
     int retry = 0;
-    while (retry <= 10) {
-    if (!WiFi.isConnected()) {
+    while (retry <= 20) {
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Trying to connect to wifi");
         WiFi.begin(username,password);
-        delay(500);
+        WiFi.waitForConnectResult();
+        delay(1000);
     } else {
+        Serial.println("connected to wifi");
+        Serial.println(WiFi.localIP());
         return 1;
     }
-    retry += 1;
+    retry++;
     }
     return 0;
 }
-
-bool Blite::startServer() {
-    if (WiFi.isConnected()){
-        WiFi.disconnect();
+void Blite::connectWiFi(){
+    int cnt = 0;
+    while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    if(cnt++ >= 15){
+       WiFi.beginSmartConfig();
+       while(1){
+           delay(500);
+           if(WiFi.smartConfigDone()){
+            //  Serial.println("SmartConfig Success");
+            //  blinkSmartConfig();
+             break;
+           }
+       }
     }
-    return 0;
+  }
+}
+bool Blite::APServer() {
+    if (WiFi.isConnected()){
+        if (WiFi.disconnect()){
+            return 0;
+        }
+    }
+    const char* ssid = "buidybee_rc_car";
+    IPAddress local_IP(192, 168, 4, 1);
+    // We set a Gateway IP address
+    IPAddress gateway(192, 168, 4, 1);
+    IPAddress subnet(255, 255, 255, 0);
+    // Connecting WiFi
+    WiFi.softAPConfig(local_IP,gateway,subnet);
+    WiFi.mode(WIFI_AP);
+    return WiFi.softAP(ssid);
+}
+bool Blite::buttonPressed() {
+    return !digitalRead(SW1);
+}
+
+void Blite::setup(){
+  pinMode(SW1,INPUT_PULLUP);
+  pinMode(M12_A,OUTPUT);
+  pinMode(M12_B,OUTPUT);
+  pinMode(M34_A,OUTPUT);
+  pinMode(M34_B,OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  this->defineM12(true);
+  this->defineM34(true);
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+
+}
+
+void Blite::glowLed(bool s){
+  if (s){
+    digitalWrite(LED_BUILTIN, LOW);
+  } else{
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+
+}
+
+void Blite::blinkLed(int c){
+  for (int i=0;i<c;i++){
+     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+     delay(500);
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    delay(500);
+  }
+}
+
+int Blite::readADC(){
+    return analogRead(ADC1);
 }
