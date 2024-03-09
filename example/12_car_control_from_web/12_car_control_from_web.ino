@@ -87,6 +87,7 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   // Initialize WebSocket server
+  
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
 
