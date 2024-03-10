@@ -1,5 +1,5 @@
 
-const char *HTML_CONTENT = R"=====(
+const char *REMOTE_HTML_CONTENT = R"=====(
 <!DOCTYPE html>
 <html>
 <head>

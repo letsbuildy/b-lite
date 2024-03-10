@@ -7,11 +7,10 @@ ESP8266WebServer server(80);
 void setup(){
     myBot.setup();
     Serial.begin(115200);
-    myBot.APServer();
-
+    myBot.smartConnectWiFi();
     server.on("/", HTTP_GET, []() {
         Serial.println("Web Server: received a web page request");
-        String html = HTML_CONTENT;
+        String html = REMOTE_HTML_CONTENT;
         server.send(200, "text/html", html);
     });
     server.begin();
