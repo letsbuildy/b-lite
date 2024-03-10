@@ -65,24 +65,15 @@ bool Blite::connectWiFi(const char *username, const char *password){
     }
     return 0;
 }
-void Blite::connectWiFi(){
-    int cnt = 0;
-    while(WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    if(cnt++ >= 15){
-       WiFi.beginSmartConfig();
-       while(1){
-           delay(500);
-           if(WiFi.smartConfigDone()){
-            //  Serial.println("SmartConfig Success");
-            //  blinkSmartConfig();
-             break;
-           }
-       }
-    }
-  }
+bool Blite::smartConnectWiFi(){
+    WiFi.disconnect();
+    WiFi.mode(WIFI_STA);
+    WiFiManager wm;
+    bool res;
+    res = wm.autoConnect("Buildybee-smart-config","buildybee"); // password protected ap
+    return res;
 }
+
 bool Blite::APServer() {
     if (WiFi.isConnected()){
         if (WiFi.disconnect()){
@@ -115,6 +106,7 @@ void Blite::setup(){
   this->defineM34(true);
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
+  
 
 }
 

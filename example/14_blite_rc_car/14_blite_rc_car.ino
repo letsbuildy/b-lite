@@ -1,29 +1,22 @@
 #include "blite.h"
-#include "index.h"
+#include "remote.h"
 
 Blite myBot;
+ESP8266WebServer server(80);
 
 void setup(){
     myBot.setup();
     Serial.begin(115200);
-    delay(1000);
-    Serial.println(myBot.getIO("io1"));
-
-    myBot.smartConnectWiFi();
-    
-    //check local server
-    // if (myBot.APServer()){
-    //   myBot.glowLed(true);
-    // }
-    
-    //check wifi
-    // if (myBot.connectWiFi("","")){
-    //     myBot.glowLed(true);
-    // } else {
-    //     Serial.println("Cannot connect");
-    // }
+    myBot.APServer();
+    server.on("/", HTTP_GET, []() {
+    Serial.println("Web Server: received a web page request");
+    String html = HTML_CONTENT;  // Use the HTML content from the servo_html.h file
+    server.send(200, "text/html", html);
+  });
+  server.begin();
 }
 void loop(){
+    server.handleClient();
     if (myBot.buttonPressed()){
         myBot.blinkLed(2);
     }

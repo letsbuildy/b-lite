@@ -17,14 +17,14 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <WiFiUdp.h>
+#include <WiFiManager.h>
 
 class Blite {
 public:
 void setup();
 bool APServer();
 bool connectWiFi(const char * username, const char * password);
-void connectWiFi();
+bool smartConnectWiFi();
 void moveForward();
 void moveBackward();
 void turnRight();

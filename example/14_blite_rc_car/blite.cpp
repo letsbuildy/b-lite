@@ -65,22 +65,13 @@ bool Blite::connectWiFi(const char *username, const char *password){
     }
     return 0;
 }
-void Blite::smartConnectWiFi(){
+bool Blite::smartConnectWiFi(){
+    WiFi.disconnect();
+    WiFi.mode(WIFI_STA);
     WiFiManager wm;
     bool res;
-    // res = wm.autoConnect(); // auto generated AP name from chipid
-    // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-    res = wm.autoConnect("AutoConnectAP","password"); // password protected ap
-
-    if(!res) {
-        Serial.println("Failed to connect");
-        // ESP.restart();
-    } 
-    else {
-        //if you get here you have connected to the WiFi    
-        Serial.println("connected...yeey :)");
-    }
-
+    res = wm.autoConnect("Buildybee-smart-config","buildybee"); // password protected ap
+    return res;
 }
 
 bool Blite::APServer() {
@@ -115,6 +106,7 @@ void Blite::setup(){
   this->defineM34(true);
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
+  
 
 }
 

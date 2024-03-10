@@ -24,7 +24,7 @@ public:
 void setup();
 bool APServer();
 bool connectWiFi(const char * username, const char * password);
-void smartConnectWiFi();
+bool smartConnectWiFi();
 void moveForward();
 void moveBackward();
 void turnRight();
