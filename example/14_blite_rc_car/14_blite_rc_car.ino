@@ -8,11 +8,13 @@ void setup(){
     Serial.begin(115200);
     delay(1000);
     Serial.println(myBot.getIO("io1"));
+
+    myBot.smartConnectWiFi();
     
     //check local server
-    if (myBot.APServer()){
-      myBot.glowLed(true);
-    }
+    // if (myBot.APServer()){
+    //   myBot.glowLed(true);
+    // }
     
     //check wifi
     // if (myBot.connectWiFi("","")){

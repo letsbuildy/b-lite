@@ -65,24 +65,24 @@ bool Blite::connectWiFi(const char *username, const char *password){
     }
     return 0;
 }
-void Blite::connectWiFi(){
-    int cnt = 0;
-    while(WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    if(cnt++ >= 15){
-       WiFi.beginSmartConfig();
-       while(1){
-           delay(500);
-           if(WiFi.smartConfigDone()){
-            //  Serial.println("SmartConfig Success");
-            //  blinkSmartConfig();
-             break;
-           }
-       }
+void Blite::smartConnectWiFi(){
+    WiFiManager wm;
+    bool res;
+    // res = wm.autoConnect(); // auto generated AP name from chipid
+    // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
+    res = wm.autoConnect("AutoConnectAP","password"); // password protected ap
+
+    if(!res) {
+        Serial.println("Failed to connect");
+        // ESP.restart();
+    } 
+    else {
+        //if you get here you have connected to the WiFi    
+        Serial.println("connected...yeey :)");
     }
-  }
+
 }
+
 bool Blite::APServer() {
     if (WiFi.isConnected()){
         if (WiFi.disconnect()){
