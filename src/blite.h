@@ -16,7 +16,7 @@
 #define I2C_SDA 5
 
 #define ADC1 A0
-#include <Arduino.h>
+
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
