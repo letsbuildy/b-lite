@@ -1,6 +1,8 @@
 #ifndef BLITE_H_
 #define BLITE_H_
 
+#if defined(ESP8266)
+
 #define IO1 6
 #define IO2 7
 #define SW1 16
@@ -61,4 +63,5 @@ void defineM34(bool polarity){
     }
 };
 };
+#endif
 #endif
