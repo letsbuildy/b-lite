@@ -3,17 +3,17 @@
 
 #if defined(ESP8266)
 
-#define IO1 6
-#define IO2 7
+#define IO1 12
+#define IO2 13
 #define SW1 16
 
-#define M12_A 0
-#define M12_B 2
-#define M34_A 14
-#define M34_B 14
+#define M1 0
+#define M2 2
+#define M3 14
+#define M4 15
 
-#define I2C_SCL 4
-#define I2C_SDA 5
+#define I2C_SCL 5
+#define I2C_SDA 4
 
 #define ADC1 A0
 
@@ -46,20 +46,20 @@ private:
 int m1,m2,m3,m4,speed;
 void defineM12(bool polarity){
     if (polarity){
-        this->m1 = M12_A;
-        this->m2 = M12_B;
+        this->m1 = M1;
+        this->m2 = M2;
     } else {
-        this->m2 = M12_A;
-        this->m1 = M12_B;
+        this->m2 = M1;
+        this->m1 = M2;
     }
 };
 void defineM34(bool polarity){
      if (polarity){
-        this->m3 = M34_A;
-        this->m4 = M34_B;
+        this->m3 = M3;
+        this->m4 = M4;
     } else {
-        this->m4 = M34_A;
-        this->m3 = M34_B;
+        this->m4 = M3;
+        this->m3 = M4;
     }
 };
 };

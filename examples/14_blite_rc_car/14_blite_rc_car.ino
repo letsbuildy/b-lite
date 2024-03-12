@@ -1,4 +1,4 @@
-#include "blite.h"
+#include <blite.h>
 #include "remote.h"
 
 Blite myBot;
@@ -13,7 +13,7 @@ void setup(){
         String html = REMOTE_HTML_CONTENT;
         wifiRemoteControl.send(200, "text/html", html);
     });
-    server.begin();
+    wifiRemoteControl.begin();
 }
 void loop(){
     wifiRemoteControl.handleClient();
