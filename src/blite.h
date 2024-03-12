@@ -42,8 +42,15 @@ void glowLed(bool s);
 void blinkLed(int c);
 int readADC();
 
+void setupServer(String HTML_CONTENT);
+void renderServer();
+void smartRenderServer(String HTML_CONTENT);
+
 private:
 int m1,m2,m3,m4,speed;
+ESP8266WebServer webServer = ESP8266WebServer(80);
+bool serverSetupDone = false;
+
 void defineM12(bool polarity){
     if (polarity){
         this->m1 = M1;

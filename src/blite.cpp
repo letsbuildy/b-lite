@@ -131,3 +131,22 @@ void Blite::blinkLed(int c){
 int Blite::readADC(){
     return analogRead(ADC1);
 }
+
+void Blite::setupServer(String HTML_CONTENT) {
+    this->webServer.on("/", HTTP_GET, [&]() {
+        this->webServer.send(200, "text/html", HTML_CONTENT);
+    });
+    this->webServer.begin();
+    this->serverSetupDone = true;
+}
+
+void Blite::renderServer() {
+    this->webServer.handleClient();
+}
+
+void Blite::smartRenderServer(String HTML_CONTENT){
+    if (!this->serverSetupDone) {
+        this->setupServer(HTML_CONTENT);
+    }
+    this->renderServer();
+}
