@@ -96,10 +96,10 @@ bool Blite::buttonPressed() {
 
 void Blite::setup(){
   pinMode(SW1,INPUT_PULLUP);
-  pinMode(M12_A,OUTPUT);
-  pinMode(M12_B,OUTPUT);
-  pinMode(M34_A,OUTPUT);
-  pinMode(M34_B,OUTPUT);
+  pinMode(M1,OUTPUT);
+  pinMode(M2,OUTPUT);
+  pinMode(M3,OUTPUT);
+  pinMode(M4,OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
   this->defineM12(true);
