@@ -104,6 +104,8 @@ void Blite::setup(){
   digitalWrite(LED_BUILTIN, HIGH);
   this->defineM12(true);
   this->defineM34(true);
+  String newHostname = "buildybee";
+  WiFi.hostname(newHostname.c_str());
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
   
@@ -133,15 +135,17 @@ int Blite::readADC(){
 }
 
 void Blite::setupServer(String HTML_CONTENT) {
-    this->webServer.on("/", HTTP_GET, [&]() {
+    this->webServer.on("/", HTTP_GET, [=]() {
         this->webServer.send(200, "text/html", HTML_CONTENT);
     });
     this->webServer.begin();
     this->serverSetupDone = true;
+    this->otaSetup();
 }
 
 void Blite::renderServer() {
     this->webServer.handleClient();
+    this->otaLoop();
 }
 
 void Blite::smartRenderServer(String HTML_CONTENT){
@@ -149,4 +153,44 @@ void Blite::smartRenderServer(String HTML_CONTENT){
         this->setupServer(HTML_CONTENT);
     }
     this->renderServer();
+}
+
+void Blite::otaSetup(){
+
+  ArduinoOTA.onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH) {
+      type = "sketch";
+    } else {  // U_FS
+      type = "filesystem";
+    }
+
+    // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+    Serial.println("Start updating " + type);
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) {
+      Serial.println("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      Serial.println("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      Serial.println("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      Serial.println("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      Serial.println("End Failed");
+    }
+  });
+  ArduinoOTA.begin();
+}
+
+void Blite::otaLoop(){
+    ArduinoOTA.handle();
 }

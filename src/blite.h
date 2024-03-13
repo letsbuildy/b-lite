@@ -20,6 +20,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
+#include <ArduinoOTA.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
 
 class Blite {
 public:
@@ -45,6 +48,9 @@ int readADC();
 void setupServer(String HTML_CONTENT);
 void renderServer();
 void smartRenderServer(String HTML_CONTENT);
+
+void otaSetup();
+void otaLoop();
 
 private:
 int m1,m2,m3,m4,speed;
