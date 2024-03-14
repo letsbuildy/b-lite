@@ -12,8 +12,4 @@ void setup(){
 void loop(){
     String html = REMOTE_HTML_CONTENT;
     myBot.smartRenderServer(html);
-    if (myBot.buttonPressed()){
-        myBot.blinkLed(2);
-    }
 }
-
