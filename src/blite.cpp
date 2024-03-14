@@ -100,24 +100,14 @@ void Blite::setup(){
   pinMode(M2,OUTPUT);
   pinMode(M3,OUTPUT);
   pinMode(M4,OUTPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
+  this->stopMotor();
   this->defineM12(true);
   this->defineM34(true);
   String newHostname = "buildybee";
   WiFi.hostname(newHostname.c_str());
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
-  
-
-}
-
-void Blite::glowLed(bool s){
-  if (s){
-    digitalWrite(LED_BUILTIN, LOW);
-  } else{
-    digitalWrite(LED_BUILTIN, HIGH);
-  }
+  this->otaSetup();
 
 }
 
@@ -140,7 +130,6 @@ void Blite::setupServer(String HTML_CONTENT) {
     });
     this->webServer.begin();
     this->serverSetupDone = true;
-    this->otaSetup();
 }
 
 void Blite::renderServer() {
@@ -193,4 +182,12 @@ void Blite::otaSetup(){
 
 void Blite::otaLoop(){
     ArduinoOTA.handle();
+}
+
+void Blite::stopMotor(){
+  digitalWrite(M1,LOW);
+  digitalWrite(M2,LOW);
+  digitalWrite(M3,LOW);
+  digitalWrite(M4,LOW);
+
 }
