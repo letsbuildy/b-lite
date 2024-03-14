@@ -34,6 +34,7 @@ void moveForward();
 void moveBackward();
 void turnRight();
 void turnLeft();
+void stopMotor();
 void setSpeed(int speed);
 
 void reversePolarityM12();
@@ -41,7 +42,6 @@ void reversePolarityM34();
 
 int getIO(const char * io);
 bool buttonPressed();
-void glowLed(bool s);
 void blinkLed(int c);
 int readADC();
 
