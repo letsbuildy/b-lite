@@ -20,28 +20,28 @@ void Blite::reversePolarityM34(){
     this->defineM34(false);
 }
 void Blite::moveForward(){
-    analogWrite(m1,speed);
-    digitalWrite(m2,LOW);
-    analogWrite(m4,speed);
-    digitalWrite(m3,LOW);
+    analogWrite(this->m1,this->speed);
+    digitalWrite(this->m2,LOW);
+    analogWrite(this->m4,this->speed);
+    digitalWrite(this->m3,LOW);
 }
 void Blite::moveBackward(){
-    analogWrite(m2,speed);
-    digitalWrite(m1,LOW);
-    analogWrite(m3,speed);
-    digitalWrite(m4,LOW);
+    analogWrite(this->m2,this->speed);
+    digitalWrite(this->m1,LOW);
+    analogWrite(this->m3,this->speed);
+    digitalWrite(this->m4,LOW);
 }
 void Blite::turnRight(){
-    digitalWrite(m1,LOW);
-    digitalWrite(m2,LOW);
-    analogWrite(m4,speed);
-    digitalWrite(m3,LOW);
+    digitalWrite(this->m1,LOW);
+    digitalWrite(this->m2,LOW);
+    analogWrite(this->m4,this->speed);
+    digitalWrite(this->m3,LOW);
 }
 void Blite::turnLeft(){
-    analogWrite(m1,speed);
-    digitalWrite(m2,LOW);
-    digitalWrite(m3,LOW);
-    digitalWrite(m4,LOW);
+    analogWrite(this->m1,this->speed);
+    digitalWrite(this->m2,LOW);
+    digitalWrite(this->m3,LOW);
+    digitalWrite(this->m4,LOW);
 }
 void Blite::setSpeed(int s){
     this->speed = s ;
@@ -103,6 +103,7 @@ void Blite::setup(){
   this->stopMotor();
   this->defineM12(true);
   this->defineM34(true);
+  this->speed = 100;
   String newHostname = "buildybee";
   WiFi.hostname(newHostname.c_str());
   WiFi.disconnect();
