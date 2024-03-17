@@ -9,6 +9,10 @@ int Blite::getIO(const char * io){
         return I2C_SCL;
     } else if (io == "sda"){
         return I2C_SDA;
+    } else if (io == "io3") {
+        return I2C_SCL;
+    } else if (io == "io4"){
+        return I2C_SDA;
     }
     return -1;
     
