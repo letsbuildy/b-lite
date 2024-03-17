@@ -1,92 +1,46 @@
+#include <blite.h>
 
-#define IN_1   D1   // Right Connector motor
-#define IN_2   D2
-#define IN_3   D3   // Left Connector motor
-#define IN_4   D4
-
-
-#define S1     D6
-#define S2     D7
-
-int speedCar = 400; //0-1024
+Blite myBot;
+int irLeft = myBot.getIO("io1");
+int irRight = myBot.getIO("io2");
+bool lineFollwerMode = false;
 
 void setup()
 {
   // Debug console
-  Serial.begin(9600);
+  Serial.begin(115200);
+  myBot.setup();
+  myBot.smartConnectWiFi();
 
-  pinMode(IN_1,OUTPUT);
-  pinMode(IN_2,OUTPUT);
-  pinMode(IN_3,OUTPUT);
-  pinMode(IN_4,OUTPUT);
-
-  pinMode(S1,INPUT);
-  pinMode(S2,INPUT);
-  
-  digitalWrite(IN_1,LOW);
-  digitalWrite(IN_2,LOW);
-  digitalWrite(IN_3,LOW);
-  digitalWrite(IN_4,LOW);
 }
-
-void goAhead(){ 
-
-      digitalWrite(IN_1, LOW);
-      analogWrite(IN_2, speedCar);
-
-      digitalWrite(IN_3, LOW);
-      analogWrite(IN_4, speedCar);
-
-  }
-
-void goRight(){ 
-
-      analogWrite(IN_1, speedCar);
-      digitalWrite(IN_2, LOW);
-
-      digitalWrite(IN_3, LOW);
-      analogWrite(IN_4, speedCar);
-  }
-
-void goLeft(){
-
-      digitalWrite(IN_1, LOW);
-      analogWrite(IN_2, speedCar);
-
-      analogWrite(IN_3, speedCar);
-      digitalWrite(IN_4, LOW);
-  }
-
-void stopRobot(){  
-
-      digitalWrite(IN_1, LOW);
-      digitalWrite(IN_2, LOW);
-
-      digitalWrite(IN_3, LOW);
-      digitalWrite(IN_4, LOW);
- }
 
 void loop()
 {
-  // if(digitalRead(switch)==HIGH)
-  // {
+  myBot.otaLoop();
+
+  if(myBot.buttonPressed()) {
+    lineFollwerMode = !lineFollwerMode;
+  }
+  if (lineFollwerMode){
     Serial.print("Line Follower Mode");
-    if(digitalRead(S1)==LOW  && digitalRead(S2)==LOW)
+    if(digitalRead(irLeft)==LOW  && digitalRead(irRight)==LOW)
     {
-      goAhead();
+      myBot.moveForward();
     }
-    if(digitalRead(S1)==HIGH  && digitalRead(S2)==LOW)
+    if(digitalRead(irLeft)==HIGH  && digitalRead(irRight)==LOW)
     {
-      goRight();
+      myBot.turnRight();
     }
-    if(digitalRead(S1)==LOW  && digitalRead(S2)==HIGH)
+    if(digitalRead(irLeft)==LOW  && digitalRead(irRight)==HIGH)
     {
-      goLeft();
+      myBot.turnLeft();
     }
-    if(digitalRead(S1)==HIGH  && digitalRead(S2)==HIGH)
+    if(digitalRead(irLeft)==HIGH  && digitalRead(irRight)==HIGH)
     {
-      stopRobot();
+      myBot.stopMotor();
+      lineFollwerMode = false;
+
     }
-  // }
+  }
 
 }
