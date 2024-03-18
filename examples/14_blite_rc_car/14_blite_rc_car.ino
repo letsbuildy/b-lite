@@ -2,8 +2,7 @@
 #include "remote.h"
 #include <WebSocketsServer.h>
 
-Blite myBot;
-WebSocketsServer webSocket = WebSocketsServer(81);
+
 #define CMD_BACKWARD 2
 #define CMD_STOP 0
 #define CMD_FORWARD 1
@@ -12,6 +11,23 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 #define CMD_PUSH 5
 #define CMD_SRVCLCK 6
 #define CMD_SRVACLCK 9
+
+Blite myBot;
+WebSocketsServer webSocket = WebSocketsServer(81);
+String html = REMOTE_HTML_CONTENT;
+
+void setup(){
+    Serial.begin(115200);
+    myBot.smartConnectWiFi();
+    webSocket.begin();
+    webSocket.onEvent(webSocketEvent);
+
+}
+void loop(){
+    
+    myBot.smartRenderServer(html);
+    webSocket.loop();
+}
 
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
@@ -71,18 +87,4 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
       break;
   }
-}
-
-
-void setup(){
-    Serial.begin(115200);
-    myBot.smartConnectWiFi();
-    webSocket.begin();
-    webSocket.onEvent(webSocketEvent);
-
-}
-void loop(){
-    String html = REMOTE_HTML_CONTENT;
-    myBot.smartRenderServer(html);
-    webSocket.loop();
 }
