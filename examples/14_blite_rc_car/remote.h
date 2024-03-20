@@ -198,15 +198,15 @@ function mouse_up(event)
 
 function wc_onclickpush() 
 {   
-  send_command(CMD_PUSH);   
+  send_command(5);   
 }
 function wc_onclickservclck() 
 {   
-  send_command(CMD_SRVCLCK);   
+  send_command(6);   
 }
 function wc_onclickservaclck() 
 {   
-  send_command(CMD_SRVACLCK);   
+  send_command(9);   
 }
 
 function send_command(cmd) 

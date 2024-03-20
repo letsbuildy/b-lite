@@ -1,9 +1,8 @@
 #include <blite.h>
-#include "remote.h"
+#include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
+#include "remote.h"
 
-Blite myBot;
-WebSocketsServer webSocket = WebSocketsServer(81);
 #define CMD_BACKWARD 2
 #define CMD_STOP 0
 #define CMD_FORWARD 1
@@ -13,6 +12,11 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 #define CMD_SRVCLCK 6
 #define CMD_SRVACLCK 9
 
+
+Blite mybot;
+ESP8266WebServer wifiRemoteControl(80);
+WebSocketsServer webSocket = WebSocketsServer(81);  // WebSocket server on port 81
+int puchButtonCounter = 0;
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
   switch (type) {
@@ -35,7 +39,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
       switch (command) {
         case CMD_STOP:
           Serial.println("Stop");
-         // mybot.stop();
+          mybot.stopMotor();
           break;
         case CMD_FORWARD:
           Serial.println("Move Forward");
@@ -75,14 +79,21 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
 
 void setup(){
+    mybot.setup();
     Serial.begin(115200);
-    myBot.smartConnectWiFi();
+    mybot.smartConnectWiFi();
     webSocket.begin();
     webSocket.onEvent(webSocketEvent);
+    wifiRemoteControl.on("/", HTTP_GET, []() {
+      Serial.println("Web Server: received a web page request");
+       String html = REMOTE_HTML_CONTENT;
+       wifiRemoteControl.send(200, "text/html", html);
+   });
+   wifiRemoteControl.begin();
 
 }
 void loop(){
-    String html = REMOTE_HTML_CONTENT;
-    myBot.smartRenderServer(html);
+    wifiRemoteControl.handleClient();
     webSocket.loop();
+
 }
