@@ -198,6 +198,7 @@ function mouse_up(event)
 
 function wc_onclickpush() 
 {   
+<<<<<<< HEAD
   send_command(5);   
 }
 function wc_onclickservclck() 
@@ -207,6 +208,17 @@ function wc_onclickservclck()
 function wc_onclickservaclck() 
 {   
   send_command(9);   
+=======
+  send_command(CMD_PUSH);   
+}
+function wc_onclickservclck() 
+{   
+  send_command(CMD_SRVCLCK);   
+}
+function wc_onclickservaclck() 
+{   
+  send_command(CMD_SRVACLCK);   
+>>>>>>> af1e3ca0525205fa8100360e129f9d18ad6427cb
 }
 
 function send_command(cmd) 
