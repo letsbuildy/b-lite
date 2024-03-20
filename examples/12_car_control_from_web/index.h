@@ -1,5 +1,5 @@
 
-const char *TEST_HTML_CONTENT = R"=====(
+const char *HTML_CONTENT = R"=====(
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +11,7 @@ button { text-align: center; font-size: 24px;}
 #container {
     margin-right: auto;
     margin-left: auto;
-    width: 400px; 
+  width: 400px; 
     height: 400px;
     position: relative;
     margin-bottom: 10px;
@@ -77,7 +77,7 @@ var ws = null;
 
 function init() 
 {
-
+  
   var container = document.querySelector("#container");
     container.addEventListener("touchstart", mouse_down);
     container.addEventListener("touchend", mouse_up);
@@ -89,7 +89,7 @@ function init()
 function ws_onmessage(e_msg)
 {
     e_msg = e_msg || window.event; // MessageEvent
-
+ 
     //alert("msg : " + e_msg.data);
 }
 function ws_onopen()
@@ -113,7 +113,7 @@ function wc_onclick()
   {
     ws = new WebSocket("ws://" + window.location.host + ":81");
     document.getElementById("ws_state").innerHTML = "CONNECTING";
-
+    
     ws.onopen = ws_onopen;
     ws.onclose = ws_onclose;
     ws.onmessage = ws_onmessage; 
