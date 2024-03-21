@@ -20,6 +20,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
+#include <ArduinoOTA.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
 
 class Blite {
 public:
@@ -31,6 +34,7 @@ void moveForward();
 void moveBackward();
 void turnRight();
 void turnLeft();
+void stopMotor();
 void setSpeed(int speed);
 
 void reversePolarityM12();
@@ -38,12 +42,21 @@ void reversePolarityM34();
 
 int getIO(const char * io);
 bool buttonPressed();
-void glowLed(bool s);
 void blinkLed(int c);
 int readADC();
 
+void setupServer(String &html_content);
+void renderServer();
+void smartRenderServer(String &html_content);
+
+void otaSetup();
+void otaLoop();
+
 private:
 int m1,m2,m3,m4,speed;
+ESP8266WebServer webServer = ESP8266WebServer(80);
+bool serverSetupDone = false;
+
 void defineM12(bool polarity){
     if (polarity){
         this->m1 = M1;

@@ -9,6 +9,10 @@ int Blite::getIO(const char * io){
         return I2C_SCL;
     } else if (io == "sda"){
         return I2C_SDA;
+    } else if (io == "io3") {
+        return I2C_SCL;
+    } else if (io == "io4"){
+        return I2C_SDA;
     }
     return -1;
     
@@ -20,28 +24,28 @@ void Blite::reversePolarityM34(){
     this->defineM34(false);
 }
 void Blite::moveForward(){
-    analogWrite(m1,speed);
-    digitalWrite(m2,LOW);
-    analogWrite(m4,speed);
-    digitalWrite(m3,LOW);
+    analogWrite(this->m1,this->speed);
+    digitalWrite(this->m2,LOW);
+    analogWrite(this->m4,this->speed);
+    digitalWrite(this->m3,LOW);
 }
 void Blite::moveBackward(){
-    analogWrite(m2,speed);
-    digitalWrite(m1,LOW);
-    analogWrite(m3,speed);
-    digitalWrite(m4,LOW);
+    analogWrite(this->m2,this->speed);
+    digitalWrite(this->m1,LOW);
+    analogWrite(this->m3,this->speed);
+    digitalWrite(this->m4,LOW);
 }
 void Blite::turnRight(){
-    digitalWrite(m1,LOW);
-    digitalWrite(m2,LOW);
-    analogWrite(m4,speed);
-    digitalWrite(m3,LOW);
+    digitalWrite(this->m1,LOW);
+    digitalWrite(this->m2,LOW);
+    analogWrite(this->m4,this->speed);
+    digitalWrite(this->m3,LOW);
 }
 void Blite::turnLeft(){
-    analogWrite(m1,speed);
-    digitalWrite(m2,LOW);
-    digitalWrite(m3,LOW);
-    digitalWrite(m4,LOW);
+    analogWrite(this->m1,this->speed);
+    digitalWrite(this->m2,LOW);
+    digitalWrite(this->m3,LOW);
+    digitalWrite(this->m4,LOW);
 }
 void Blite::setSpeed(int s){
     this->speed = s ;
@@ -96,26 +100,19 @@ bool Blite::buttonPressed() {
 
 void Blite::setup(){
   pinMode(SW1,INPUT_PULLUP);
-  pinMode(M12_A,OUTPUT);
-  pinMode(M12_B,OUTPUT);
-  pinMode(M34_A,OUTPUT);
-  pinMode(M34_B,OUTPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
+  pinMode(M1,OUTPUT);
+  pinMode(M2,OUTPUT);
+  pinMode(M3,OUTPUT);
+  pinMode(M4,OUTPUT);
+  this->stopMotor();
   this->defineM12(true);
   this->defineM34(true);
+  this->speed = 100;
+  String newHostname = "buildybee";
+  WiFi.hostname(newHostname.c_str());
   WiFi.disconnect();
   WiFi.mode(WIFI_OFF);
-  
-
-}
-
-void Blite::glowLed(bool s){
-  if (s){
-    digitalWrite(LED_BUILTIN, LOW);
-  } else{
-    digitalWrite(LED_BUILTIN, HIGH);
-  }
+  this->otaSetup();
 
 }
 
@@ -130,4 +127,72 @@ void Blite::blinkLed(int c){
 
 int Blite::readADC(){
     return analogRead(ADC1);
+}
+
+void Blite::setupServer(String &html_content) {
+    this->webServer.on("/", HTTP_GET, [=]() {
+        this->webServer.send(200, "text/html", html_content);
+    });
+    this->webServer.begin();
+    this->serverSetupDone = true;
+}
+
+void Blite::renderServer() {
+    this->webServer.handleClient();
+    this->otaLoop();
+}
+
+void Blite::smartRenderServer(String &html_content){
+    if (!this->serverSetupDone) {
+        this->setupServer(html_content);
+    }
+    this->renderServer();
+}
+
+void Blite::otaSetup(){
+
+  ArduinoOTA.onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH) {
+      type = "sketch";
+    } else {  // U_FS
+      type = "filesystem";
+    }
+
+    // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+    Serial.println("Start updating " + type);
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) {
+      Serial.println("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      Serial.println("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      Serial.println("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      Serial.println("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      Serial.println("End Failed");
+    }
+  });
+  ArduinoOTA.begin();
+}
+
+void Blite::otaLoop(){
+    ArduinoOTA.handle();
+}
+
+void Blite::stopMotor(){
+  digitalWrite(M1,LOW);
+  digitalWrite(M2,LOW);
+  digitalWrite(M3,LOW);
+  digitalWrite(M4,LOW);
+
 }
