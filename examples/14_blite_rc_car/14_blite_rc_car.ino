@@ -1,29 +1,20 @@
 #include <blite.h>
-#include "remote.h"
 #include <WebSocketsServer.h>
+#include "remote.h"
 
+#define CMD_BACKWARD 2
 #define CMD_STOP 0
 #define CMD_FORWARD 1
-#define CMD_BACKWARD 2
 #define CMD_LEFT 4
 #define CMD_RIGHT 8
+#define CMD_PUSH 5
+#define CMD_SRVCLCK 6
+#define CMD_SRVACLCK 9
 
-Blite myBot;
-WebSocketsServer webSocket = WebSocketsServer(81);
 
-void setup(){
-    myBot.setup();
-    Serial.begin(115200);
-    myBot.smartConnectWiFi();
-    webSocket.begin();
-    webSocket.onEvent(webSocketEvent);
-
-}
-void loop(){
-    String html = REMOTE_HTML_CONTENT;
-    myBot.smartRenderServer(html);
-    webSocket.loop();
-}
+Blite mybot;
+WebSocketsServer webSocket = WebSocketsServer(81);  // WebSocket server on port 81
+String html_string = REMOTE_HTML_CONTENT;
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
   switch (type) {
@@ -46,23 +37,35 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
       switch (command) {
         case CMD_STOP:
           Serial.println("Stop");
-          myBot.stopMotor();
+          mybot.stopMotor();
           break;
         case CMD_FORWARD:
           Serial.println("Move Forward");
-           myBot.moveForward();
+          mybot.moveForward();
           break;
         case CMD_BACKWARD:
           Serial.println("Move Backward");
-           myBot.moveBackward();
+          mybot.moveBackward();
           break;
         case CMD_LEFT:
           Serial.println("Turn Left");
-           myBot.turnLeft();
+          mybot.turnLeft();
           break;
         case CMD_RIGHT:
           Serial.println("Turn Right");
-           myBot.turnRight();
+          mybot.turnRight();
+          break;
+        case CMD_PUSH:
+          Serial.println("Push button pressed");
+          //mybot.push();
+          break;
+        case CMD_SRVCLCK:
+          Serial.println("Turn servo clockwise");
+          //mybot.turnServoClockwise();
+          break;
+        case CMD_SRVACLCK:
+          Serial.println("Turn servo anti-clockwise");
+          //mybot.turnServoAntiClockwise();
           break;
         default:
           Serial.println("Unknown command");
@@ -70,4 +73,17 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
       break;
   }
+}
+
+
+void setup(){
+    mybot.setup();
+    Serial.begin(115200);
+    mybot.APServer();
+    webSocket.begin();
+    webSocket.onEvent(webSocketEvent);
+}
+void loop(){
+    mybot.smartRenderServer(html_string);
+    webSocket.loop();
 }
