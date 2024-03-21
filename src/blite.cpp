@@ -129,9 +129,9 @@ int Blite::readADC(){
     return analogRead(ADC1);
 }
 
-void Blite::setupServer(String HTML_CONTENT) {
+void Blite::setupServer(String &html_content) {
     this->webServer.on("/", HTTP_GET, [=]() {
-        this->webServer.send(200, "text/html", HTML_CONTENT);
+        this->webServer.send(200, "text/html", html_content);
     });
     this->webServer.begin();
     this->serverSetupDone = true;
@@ -142,9 +142,9 @@ void Blite::renderServer() {
     this->otaLoop();
 }
 
-void Blite::smartRenderServer(String HTML_CONTENT){
+void Blite::smartRenderServer(String &html_content){
     if (!this->serverSetupDone) {
-        this->setupServer(HTML_CONTENT);
+        this->setupServer(html_content);
     }
     this->renderServer();
 }

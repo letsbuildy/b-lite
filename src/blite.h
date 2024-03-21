@@ -45,9 +45,9 @@ bool buttonPressed();
 void blinkLed(int c);
 int readADC();
 
-void setupServer(String HTML_CONTENT);
+void setupServer(String &html_content);
 void renderServer();
-void smartRenderServer(String HTML_CONTENT);
+void smartRenderServer(String &html_content);
 
 void otaSetup();
 void otaLoop();
